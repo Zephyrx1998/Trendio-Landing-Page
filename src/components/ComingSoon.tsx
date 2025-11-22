@@ -181,7 +181,10 @@ const ComingSoon = () => {
       </main>
 
       {/* Footer */}
-      <footer className="fade-in-delay-long absolute bottom-4 md:bottom-8 left-0 right-0 text-center px-4">
+      <footer className="fade-in-delay-long absolute bottom-4 md:bottom-8 left-0 right-0 text-center px-4 space-y-2">
+        <p className="text-sm text-premium-text-light font-light">
+          For enquiries: <a href="mailto:support@trendio.world" className="text-santorini-blue hover:underline transition-all duration-300">support@trendio.world</a>
+        </p>
         <p className="text-sm text-premium-text-light font-light">
           © Trendio - 2025 All Rights Reserved
         </p>
