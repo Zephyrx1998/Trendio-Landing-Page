@@ -155,7 +155,7 @@ const ComingSoon = () => {
         </div>
 
         {/* Social Icons */}
-        <div className="fade-in-delay-long flex items-center justify-center gap-6 pt-8">
+        <div className="fade-in-delay-long flex items-center justify-center gap-6 pt-8 pb-16 md:pb-8">
           <a 
             href="#" 
             className="text-premium-text-light hover:text-santorini-blue transition-colors duration-300"
@@ -181,7 +181,7 @@ const ComingSoon = () => {
       </main>
 
       {/* Footer */}
-      <footer className="fade-in-delay-long absolute bottom-8 left-0 right-0 text-center">
+      <footer className="fade-in-delay-long absolute bottom-4 md:bottom-8 left-0 right-0 text-center px-4">
         <p className="text-sm text-premium-text-light font-light">
           © Trendio - 2025 All Rights Reserved
         </p>
