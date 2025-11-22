@@ -13,7 +13,15 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        display: ['Playfair Display', 'serif'],
+        body: ['Poppins', 'sans-serif'],
+      },
       colors: {
+        'santorini-blue': 'hsl(var(--santorini-blue))',
+        'santorini-light': 'hsl(var(--santorini-light))',
+        'premium-text': 'hsl(var(--premium-text))',
+        'premium-text-light': 'hsl(var(--premium-text-light))',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
