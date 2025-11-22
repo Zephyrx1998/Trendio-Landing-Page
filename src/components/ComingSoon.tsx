@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Instagram, Facebook, Twitter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import trendioLogo from '@/assets/trendio-logo.png';
 
 const ComingSoon = () => {
@@ -35,7 +36,7 @@ const ComingSoon = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email) {
@@ -55,6 +56,28 @@ const ComingSoon = () => {
         description: "Please enter a valid email address.",
         variant: "destructive"
       });
+      return;
+    }
+
+    // Save to database
+    const { error } = await supabase
+      .from('subscribers')
+      .insert([{ email }]);
+
+    if (error) {
+      if (error.code === '23505') {
+        toast({
+          title: "Already subscribed",
+          description: "This email is already on our list.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Something went wrong. Please try again.",
+          variant: "destructive"
+        });
+      }
       return;
     }
 
