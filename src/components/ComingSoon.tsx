@@ -19,7 +19,7 @@ const ComingSoon = () => {
   // Countdown to launch date (30 days from now)
   useEffect(() => {
     const launchDate = new Date();
-    launchDate.setDate(launchDate.getDate() + 30);
+    launchDate.setDate(launchDate.getDate() + 16);
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
