@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Instagram, Facebook, Twitter } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import trendioLogo from '@/assets/trendio-logo.png';
+import confetti from 'canvas-confetti';
 
 const ComingSoon = () => {
   const [email, setEmail] = useState('');
@@ -14,15 +15,62 @@ const ComingSoon = () => {
     minutes: 0,
     seconds: 0
   });
+  const [isLaunched, setIsLaunched] = useState(false);
   const { toast } = useToast();
 
-  // Countdown to launch date (30 days from now)
+  const triggerConfetti = useCallback(() => {
+    const duration = 5000;
+    const end = Date.now() + duration;
+
+    const colors = ['#5B8FB9', '#B6D4E8', '#F5F5F5', '#FFD700'];
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: colors
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: colors
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+
+    frame();
+
+    // Big burst in the center
+    confetti({
+      particleCount: 150,
+      spread: 100,
+      origin: { y: 0.6 },
+      colors: colors
+    });
+  }, []);
+
+  // Countdown to launch date
   useEffect(() => {
     const launchDate = new Date('2026-01-01T00:00:00');
 
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const distance = launchDate.getTime() - now;
+
+      if (distance <= 0) {
+        setIsLaunched(true);
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        clearInterval(timer);
+        triggerConfetti();
+        return;
+      }
 
       setTimeLeft({
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
@@ -33,7 +81,7 @@ const ComingSoon = () => {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [triggerConfetti]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,22 +164,35 @@ const ComingSoon = () => {
         </div>
 
         {/* Countdown Timer */}
-        <div className="fade-in-delay grid grid-cols-4 gap-4 md:gap-8 max-w-2xl mx-auto py-8">
-          {[
-            { value: timeLeft.days, label: 'Days' },
-            { value: timeLeft.hours, label: 'Hours' },
-            { value: timeLeft.minutes, label: 'Minutes' },
-            { value: timeLeft.seconds, label: 'Seconds' }
-          ].map((item, index) => (
-            <div key={index} className="space-y-2">
-              <div className="text-3xl md:text-5xl font-display font-semibold text-santorini-blue">
-                {String(item.value).padStart(2, '0')}
+        <div className="fade-in-delay max-w-2xl mx-auto py-8">
+          {isLaunched ? (
+            <div className="space-y-4 animate-scale-in">
+              <div className="text-4xl md:text-6xl font-display font-semibold text-santorini-blue">
+                We're Live!
               </div>
-              <div className="text-xs md:text-sm text-premium-text-light uppercase tracking-wider font-light">
-                {item.label}
-              </div>
+              <p className="text-lg text-premium-text-light">
+                Welcome to the new era of luxury fashion
+              </p>
             </div>
-          ))}
+          ) : (
+            <div className="grid grid-cols-4 gap-4 md:gap-8">
+              {[
+                { value: timeLeft.days, label: 'Days' },
+                { value: timeLeft.hours, label: 'Hours' },
+                { value: timeLeft.minutes, label: 'Minutes' },
+                { value: timeLeft.seconds, label: 'Seconds' }
+              ].map((item, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="text-3xl md:text-5xl font-display font-semibold text-santorini-blue">
+                    {String(item.value).padStart(2, '0')}
+                  </div>
+                  <div className="text-xs md:text-sm text-premium-text-light uppercase tracking-wider font-light">
+                    {item.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Email Subscription */}
